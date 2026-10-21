@@ -1,13 +1,22 @@
-# Running Math — multilingual logarithm practice
+# Running Math｜對數律練習 V1.2（三語修正版）
 
-Languages: 繁體中文 / English. The switcher appears in the upper-right corner, remembers the choice in localStorage, and defaults to the browser language.
+## 版本重點
+- 進入網站立即選擇繁體中文、English、日本語；之後仍可使用右上角切換語言。
+- 13 個公式、A/B 二選一與 GA4 ID `G-G1WHKV3K5K` 保留。
+- 修正公式 5 加法題：所有對數真數皆由**同一個底數**的有理指數產生，避免出現 `log_7(sqrt(3))+log_7(5)` 卻配上 ±3/2 的錯題。
+- 修正公式 3 的平方真數與答案不一致、公式 11 過大數字、非有限小數誤呈現。
+- 英日文的首頁、設定、練習名稱、答案回饋、解析與結算都會翻譯。
 
-## Deploy
-Upload all seven files to the root of the published GitHub Pages branch: `index.html`, `style.css`, `config.js`, `engine.js`, `app.js`, `i18n.js`, `README.md`. Keep all files together. GitHub Pages → Settings → Pages.
+## 部署
+將 `index.html`, `style.css`, `engine.js`, `app.js`, `i18n.js`, `config.js` 六個檔案上傳至原 GitHub Pages 專案的**相同資料夾**，覆蓋舊檔案；README.md 可選擇上傳。保持原網址不變。
 
-GA4 stays configured in `config.js` as `G-G1WHKV3K5K`. Events also include a `language` parameter; seeing this dimension in GA4 standard reports may require registering a custom dimension and a processing wait.
+部署完成後，使用手機及電腦測試：
+1. 重新開啟或強制重新整理頁面，檢查語言選擇畫面。
+2. 分別選中文、英文、日文，開始做題，答錯確認回饋與解析語言。
+3. 單一觀念選「5. 對數加法法則」，至少做 10 題，確認題目運算與 A/B 答案一致。
+4. GA4 即時報表檢查 `practice_started`、`question_answered`。
 
-## Important
-- Browser locale selects Chinese only for `zh`; other browsers default to English.
-- This release also fixes an existing product-rule generator issue where the displayed logarithm base and sampled values could differ.
-- Test in both languages, including switching languages after answering, before using in class.
+## 注意
+- 無法用有限次隨機測試保證所有題目在數學上正確，正式大量部署前建議做教師人工抽查。
+- 目前「混合觀念」模式仍依舊版邏輯抽選各公式，並非每題必定結合多個觀念；後續可再獨立升級。
+- 多語切換僅翻譯解題文字，數學公式本身保留共用。
