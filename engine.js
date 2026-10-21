@@ -19,7 +19,7 @@ case 1:{let bs=baseTex(s.b,diff);tex=log(bs,bs);ans=frac(1);wrong=pick([frac(0),
 case 2:{let bs=baseTex(s.b,diff);tex=log(bs,'1');ans=frac(0);wrong=pick([frac(1),frac(-1),frac(2)]);ex='任何合法底數的 0 次方都是 1。';break}
 case 3:{let bs=baseTex(s.b,diff),arg=kind===0?String(t.b):kind===1?'\\frac{'+t.b+'}{'+s.b+'}':(diff===1?String(t.b*t.b):'\\sqrt{'+(t.b*t.b)+'}');let answer=kind===0?frac(t.b):kind===1?frac(t.b,s.b):frac(t.b);tex='{'+bs+'}^{'+log(bs,arg)+'}';ans=answer;wrong=clampWrong(ans,[frac(s.b),frac(t.b+s.b),frac(1),neg(ans)]);ex='利用 a^{logₐ b}=b，底數相同可直接消去。';break}
 case 4:{let bs=baseTex(s.b,diff);tex=log(bs,'('+bs+')^{'+latexF(a)+'}');ans=a;wrong=clampWrong(ans,[neg(a),frac(a.d,a.n||1),add(a,frac(1))]);ex='利用 logₐ(aˣ)=x。';break}
-case 5:{let x=sample(diff),y=sample(diff),z=sample(diff);let xs=[x,y,...(kind===1?[z]:[])];tex=xs.map(k=>log(String(s.b),k.tex)).join('+');ans=xs.reduce((r,k)=>add(r,k.x),frac(0));wrong=clampWrong(ans,[xs.reduce((r,k)=>add(r,neg(k.x)),frac(0)),add(ans,frac(1)),mul(x.x,y.x)]);ex='同底對數相加等於真數相乘後取對數；指數相加。';break}
+case 5:{let x=sample(diff),y=sample(diff),z=sample(diff);let xs=[x,y,...(kind===1?[z]:[])];tex=xs.map(k=>log(String(s.b),valTex(s.b,k.p,k.q,diff))).join('+');ans=xs.reduce((r,k)=>add(r,k.x),frac(0));wrong=clampWrong(ans,[xs.reduce((r,k)=>add(r,neg(k.x)),frac(0)),add(ans,frac(1)),mul(x.x,y.x)]);ex='同底對數相加等於真數相乘後取對數；指數相加。';break}
 case 6:{let xs=[s,t,...(kind===2?[u]:[])];tex=xs.map((k,i)=>log(String(s.b),valTex(s.b,k.p,k.q,diff))).join('-');ans=xs.slice(1).reduce((r,k)=>add(r,neg(k.x)),s.x);wrong=clampWrong(ans,[xs.reduce((r,k)=>add(r,k.x),frac(0)),neg(ans),add(ans,frac(1))]);ex='同底對數相減等於真數相除後取對數；指數相減。';break}
 case 7:{let exponent=kind===0?frac(2):kind===1?frac(-2):frac(1,2);let arg=valTex(s.b,s.p,s.q,diff);tex=log(base,'\\left('+arg+'\\right)^{'+latexF(exponent)+'}');ans=mul(a,exponent);wrong=clampWrong(ans,[a,add(a,exponent),neg(ans)]);ex='logₐ(mᵗ)=t logₐm，先求原對數再乘指數。';break}
 case 8:{let x=sample(diff),den=pick([frac(1),frac(2),frac(-1),frac(1,2)]);let cbase=kind===0?'2':kind===1?'3':'5';let arg1=valTex(Number(cbase),x.p,x.q,diff),arg2=valTex(Number(cbase),den.n,den.d,diff);tex='\\frac{'+log(cbase,arg1)+'}{'+log(cbase,arg2)+'}';ans=div(x.x,den);wrong=clampWrong(ans,[div(den,x.x),mul(x.x,den),neg(ans)]);ex='換底公式：分子與分母的對數值相除。';break}
@@ -31,5 +31,21 @@ case 13:{let k=kind===0?2:kind===1?3:-2;let aa=String(s.b),bb=String(t.b),cc=val
 default:throw Error('invalid formula')}
 if(Math.abs(ans.n)>5000||ans.d>1000)throw Error('too hard');if(!wrong||eq(ans,wrong))wrong=clampWrong(ans,[add(ans,frac(1)),neg(ans),frac(0)]);return {formula:id,variant:kind,prompt:tex,correct:ans,wrong,explain:ex,concept:names[id-1]};}
 function generate(id,diff,variant){for(let i=0;i<120;i++){try{return build(id,diff,variant)}catch(e){}}throw Error('無法生成合法題目')}
-window.RM_ENGINE={names,generate,latexF,eq};
+const namesEn=['Identity: logₐ a = 1','Identity: logₐ 1 = 0','Exponential–log inverse','Logarithm–exponential inverse','Product rule','Quotient rule','Power rule','Change of base','Powers of base and argument','Reciprocal property','Chain rule','Equal powers cancellation','Logarithm–exponential exchange'];
+const explanationsEn=[
+'The logarithm of a number to its own base is 1.',
+'Any valid base raised to the power 0 equals 1.',
+'Use a^(logₐ b) = b: matching bases cancel.',
+'Use logₐ(a^x) = x.',
+'Use the product rule: adding logarithms with the same base adds their exponents.',
+'Use the quotient rule: subtracting logarithms with the same base subtracts their exponents.',
+'Use logₐ(m^t) = t · logₐ(m).',
+'Use the change-of-base formula: divide the numerator logarithm by the denominator logarithm.',
+'Use log_(a^m)(b^n) = (n/m) logₐ(b).',
+'logₐ(b) and log_b(a) are reciprocals, so their product is 1.',
+'In a chain of logarithms, the intermediate bases cancel.',
+'Raising both the base and argument to the same nonzero power does not change the logarithm.',
+'Use a^(log_b c) = c^(log_b a), then evaluate the resulting power.'
+];
+window.RM_ENGINE={names,namesEn,explanationsEn,generate,latexF,eq};
 })();
